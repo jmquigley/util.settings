@@ -7,7 +7,10 @@ let browser: any = null;
 let page: any = null;
 
 beforeAll(async () => {
-	browser = await puppeteer.launch();
+	browser = await puppeteer.launch({
+		args: ["--no-sandbox", "--disable-setuid-sandbox"]
+	});
+
 	page = await browser.newPage();
 	await page.goto("http://localhost:4000");
 });

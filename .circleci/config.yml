@@ -7,13 +7,12 @@ version: 2
 defaults: &defaults
     working_directory: ~/repo
     docker:
-        - image: circleci/node
+        - image: circleci/node:latest-browsers
 
 jobs:
     build:
         <<: *defaults
         steps:
-            - run: sysctl kernel.unprivileged_userns_clone=1
             - checkout
             - restore_cache:
                   keys:
