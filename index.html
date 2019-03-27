@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<meta charset="UTF-8" />
+	<head>
+		<title>util.settings demo</title>
+		<link rel="icon" href="data:," />
+		<script type="text/javascript" src="./index.umd.min.js"></script>
+	</head>
+	<body>
+		<h1>Settings Test</h1>
+		<ul>
+			<li id="f1"></li>
+			<li id="f2"></li>
+			<li id="f3"></li>
+		</ul>
+	</body>
+	<script>
+		const instance = Settings.instance();
+		document.getElementById("f1").innerHTML = "foo";
+		document.getElementById("f2").innerHTML = "bar";
+		document.getElementById("f3").innerHTML = "baz";
+	</script>
+</html>

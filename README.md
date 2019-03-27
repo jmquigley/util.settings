@@ -24,6 +24,8 @@ To build the app and run all tests:
 $ yarn run all
 ```
 
+This module uses [puppeteer](https://github.com/GoogleChrome/puppeteer).  If working in Linux, see this [troubleshooting guide](https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md) for setting up "Chrome Linux Sandbox".
+
 
 ## Overview
 This module contains code to manage and persist settings for a web application using [localforage](https://localforage.github.io/localForage/).

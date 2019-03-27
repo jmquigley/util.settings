@@ -29,7 +29,7 @@
 	"devDependencies": {
 		"@babel/cli": "^7.2.3",
 		"@babel/core": "^7.3.4",
-		"@babel/plugin-transform-modules-umd": "^7.2.0",
+		"@babel/plugin-transform-runtime": "^7.3.4",
 		"@babel/preset-env": "^7.3.4",
 		"@babel/preset-typescript": "^7.3.3",
 		"@babel/runtime": "^7.3.4",
@@ -39,15 +39,18 @@
 		"@types/node": "^11.11.3",
 		"@types/uuid": "^3.4.4",
 		"@types/yargs": "^12.0.9",
+		"babel-loader": "^8.0.5",
 		"babel-minify": "^0.5.0",
 		"babel-preset-minify": "^0.5.0",
 		"coveralls": "^3.0.3",
 		"enum-values": "^1.2.1",
+		"express": "^4.16.4",
 		"fs-extra": "^7.0.1",
 		"jest": "^24.5.0",
 		"localforage": "^1.7.3",
 		"on-change": "^1.1.0",
 		"prettier": "^1.16.4",
+		"puppeteer": "^1.13.0",
 		"tslint": "^5.14.0",
 		"tslint-config-prettier": "^1.18.0",
 		"typescript": "^3.3.3333",
@@ -56,28 +59,33 @@
 		"util.log": "^0.0.43",
 		"util.pkgwrap": "^0.0.105",
 		"util.string": "^0.0.23",
-		"util.toolbox": "^0.0.74"
+		"util.toolbox": "^0.0.74",
+		"webpack": "^4.29.6",
+		"webpack-cli": "^3.3.0"
 	},
 	"pkgwrap": {
 		"cleanup": [
 			"docs",
-			"cli.d.ts",
-			"cli.js.map",
-			"cli.js"
+			"server.d.ts",
+			"server.js.map",
+			"server.js"
 		]
 	},
 	"scripts": {
-		"all": "yarn install && yarn build && yarn docs && yarn test && yarn manifest",
-		"build": "yarn clean && yarn lint && yarn prettier && yarn build:es && yarn build:umd",
-		"build:es": "tsc -p . && minify index.js --out-file index.es.min.js",
-		"build:umd": "babel index.js --out-file index.umd.min.js",
+		"all": "yarn install && NODE_ENV=production yarn build && yarn docs && yarn test && yarn manifest",
+		"build": "yarn clean && yarn lint && yarn prettier && pkgwrap --build --webpack && yarn build:es",
+		"build:es": "minify index.js --out-file index.es.min.js",
 		"clean": "pkgwrap --clean",
 		"clean:dist": "yarn clean && rimraf node_modules/ yarn.lock",
 		"coverage": "pkgwrap --coverage --jest",
 		"docs": "pkgwrap --docs",
 		"lint": "pkgwrap --lint",
 		"manifest": "npm pack --dry-run",
+		"posttest": "npm stop",
+		"pretest": "npm start",
 		"prettier": "prettier --write \"**/*.{ts,tsx,js,json,yaml,yml,css}\"",
-		"test": "jest"
+		"start": "[ ! `pgrep node-http-test` ] && node server.js setting-test &",
+		"stop": "pkill --signal SIGINT node-http-test",
+		"test": "jest --runInBand"
 	}
 }
