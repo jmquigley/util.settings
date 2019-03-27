@@ -13,6 +13,7 @@ jobs:
     build:
         <<: *defaults
         steps:
+            - run: npm config set scripts-prepend-node-path true
             - checkout
             - restore_cache:
                   keys:
