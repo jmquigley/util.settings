@@ -15,9 +15,9 @@
 		"sourceMap": true,
 		"strictNullChecks": false,
 		"suppressImplicitAnyIndexErrors": true,
-		"module": "commonjs",
+		"module": "ESNext",
 		"moduleResolution": "node",
-		"target": "es6"
+		"target": "ESNext"
 	},
 	"exclude": [
 		"build",

@@ -4,20 +4,85 @@
 	<head>
 		<title>util.settings demo</title>
 		<link rel="icon" href="data:," />
+
+		<script
+			type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.7.3/localforage.min.js"
+		></script>
+
 		<script type="text/javascript" src="./index.umd.min.js"></script>
 	</head>
 	<body>
 		<h1>Settings Test</h1>
+		<h3>Original Keys</h3>
 		<ul>
-			<li id="f1"></li>
-			<li id="f2"></li>
-			<li id="f3"></li>
+			<li id="origKey1"></li>
+			<li id="origKey2"></li>
+			<li id="origKey3"></li>
+		</ul>
+
+		<h3>New Keys (after 2 second promise delay)</h3>
+		<ul>
+			<li id="newKey1"></li>
+			<li id="newKey2"></li>
+			<li id="newKey3"></li>
 		</ul>
 	</body>
 	<script>
-		const instance = Settings.instance();
-		document.getElementById("f1").innerHTML = "foo";
-		document.getElementById("f2").innerHTML = "bar";
-		document.getElementById("f3").innerHTML = "baz";
+		Settings.instance().then((instance) => {
+			instance.register({
+				name: "general",
+				default: {
+					key1: "defaultValue1",
+					key2: "defaultValue2",
+					key3: "defaultValue3"
+				}
+			});
+
+			const settings = instance.root;
+			window.settings = settings;
+
+			// The original settings registered with the settings object and local storage before update
+			localforage
+				.getItem("general.key1")
+				.then((value) => {
+					document.getElementById("origKey1").innerHTML = value;
+					return localforage.getItem("general.key2");
+				})
+				.then((value) => {
+					document.getElementById("origKey2").innerHTML = value;
+					return localforage.getItem("general.key3");
+				})
+				.then((value) => {
+					document.getElementById("origKey3").innerHTML = value;
+				})
+				.then(() => {
+					// Update the settings, retrieve them from storage and set the second set of list items.
+					settings["general"]["key1"] = "updatedValue1";
+					settings["general"]["key2"] = "updatedValue2";
+					settings["general"]["key3"] = "updatedValue3";
+
+					// This delay is required becuase the localforage update is not instantaneous
+					// after the lines above set a new value in the settings.  This is ok for the
+					// application because the settings are used through the objet which are
+					// instant.
+
+					return wait(2);
+				})
+				.then(() => {
+					return localforage.getItem("general.key1");
+				})
+				.then((value) => {
+					document.getElementById("newKey1").innerHTML = value;
+					return localforage.getItem("general.key2");
+				})
+				.then((value) => {
+					document.getElementById("newKey2").innerHTML = value;
+					return localforage.getItem("general.key3");
+				})
+				.then((value) => {
+					document.getElementById("newKey3").innerHTML = value;
+				});
+		});
 	</script>
 </html>

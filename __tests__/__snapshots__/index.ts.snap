@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Remove a key from the settings 1`] = `
+Object {
+  "testing": Object {
+    "key1": "testkey1",
+    "key2": "testkey2",
+    "key3": "testkey3",
+  },
+}
+`;
+
+exports[`Remove a key from the settings 2`] = `
+Object {
+  "testing": Object {
+    "key2": "testkey2",
+    "key3": "testkey3",
+  },
+}
+`;
+
+exports[`Retrieve an instance of the settings class 1`] = `
+Object {
+  "section1": Object {
+    "key1": "foo",
+    "key2": "bar",
+  },
+  "section2": Object {
+    "key1": "foo",
+    "key2": "bar",
+  },
+  "testing": Object {
+    "key1": "testkey1",
+    "key2": "testkey2",
+    "key3": "testkey3",
+  },
+}
+`;
+
+exports[`Retrieve an instance of the settings class 2`] = `
+Object {
+  "section1": Object {
+    "key1": "foo",
+    "key2": "bar",
+  },
+  "section2": Object {
+    "key1": "foo",
+    "key2": "bar",
+  },
+  "testing": Object {
+    "key1": "testkey1",
+    "key2": "testkey2",
+    "key3": "testkey3",
+  },
+}
+`;
+
+exports[`Use a single config instance with register 1`] = `
+Object {
+  "section3": Object {
+    "key1": "foo",
+    "key2": "bar",
+  },
+  "testing": Object {
+    "key1": "testkey1",
+    "key2": "testkey2",
+    "key3": "testkey3",
+  },
+}
+`;
+
+exports[`Use a single config instance with register 2`] = `
+Object {
+  "section3": Object {
+    "key1": "foo",
+    "key2": "bar",
+  },
+  "testing": Object {
+    "key1": "testkey1",
+    "key2": "testkey2",
+    "key3": "testkey3",
+  },
+}
+`;
