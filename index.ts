@@ -35,8 +35,13 @@ export class Settings {
 
 	/**
 	 * A factory method that retrieves the instance of the settings object.
-	 * It uses a promise to retrieve the instance.  The promise resolves to
-	 * the refernce to the instance object.
+	 * It uses a promise to retrieve the instance. The promise resolves to
+	 * the reference to the instance object.  This is a singleton pattern
+	 * so repeated calls to this method will resolve to the same instance
+	 * unless the reset flag is set to true.
+	 * @param reset=false {boolean} - if true, then generate a new instance
+	 * of the settings.  Typically this should not be used and was only
+	 * added to aid in testing.
 	 * @return a Promise that resolves to the instance object for the
 	 * settings.
 	 */
@@ -83,18 +88,24 @@ export class Settings {
 	}
 
 	/**
-	 * Reapplies the change proxy on the raw settings object.
+	 * Reapplies the change proxy on the raw settings object.  A convenience
+	 * method to reapply settings after register adds new values.
+	 * @private
 	 */
 	private applyProxyToRoot() {
 		this._root = onChange(this._noProxyRoot, this.save);
 	}
 
+	/**
+	 * Removes all settings.
+	 */
 	public clear() {
 		return new Promise(
 			(resolve: PromiseFn<Settings>, reject: PromiseFn<string>) => {
 				localforage
 					.clear()
 					.then(() => {
+						this._noProxyRoot = this._root = {};
 						resolve(this);
 					})
 					.catch((err: string) => {
@@ -107,7 +118,8 @@ export class Settings {
 	/**
 	 * Initializes the object when the instance is first created.  This has to
 	 * happen outside of the constructor.  This will retrieve all of the current
-	 * composite keys from the store and process them.
+	 * composite keys from the store and add them to the root.
+	 * @private
 	 * @return a Promise that resolves to an initialized settings instance.
 	 */
 	private init() {
@@ -146,6 +158,7 @@ export class Settings {
 	 *
 	 *     "{section}.{key}"  e.g. general.debug
 	 *
+	 * @private
 	 * @param compositeKey {string} - the composite key that will be parsed
 	 * and saved in the root object.
 	 * @return a Promise object that will parse and set a new key/value pair
@@ -190,6 +203,7 @@ export class Settings {
 	 * settings object.
 	 * @return a reference to the settings proxy object (root).
 	 */
+	@autobind
 	public register(configs: SectionConfig | SectionConfig[]): Sections {
 		if (!(configs instanceof Array)) {
 			configs = [configs];
@@ -223,6 +237,11 @@ export class Settings {
 		return this._root;
 	}
 
+	/**
+	 * Removes a key from a section within the settings.
+	 * @param section {string} - the section where the key is located
+	 * @param key {string} - the key that will be delete from the section
+	 */
 	@autobind
 	public removeKey(section: string, key: string) {
 		const compositeKey = `${section}.${key}`;
@@ -241,6 +260,7 @@ export class Settings {
 	 * This method is called by the proxy when a property of the root object
 	 * is changed.  This will persiste that setting key/valu into the
 	 * localforage.
+	 * @private
 	 * @param path {string} - the "." separate path from the root to the key;
 	 * in the object where the save happened.  This generates a unique key
 	 * value that will be used in the save.
@@ -248,7 +268,7 @@ export class Settings {
 	 * @param previousValue {any} - the current value before the save
 	 */
 	@autobind
-	public save(path: string, value: any, previousValue: any) {
+	private save(path: string, value: any, previousValue: any) {
 		debug("Saving setting %s to %o from %o", path, value, previousValue);
 
 		localforage
