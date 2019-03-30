@@ -290,3 +290,5 @@ export class Settings {
 		}
 	}
 }
+
+export default Settings;

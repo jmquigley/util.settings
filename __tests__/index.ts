@@ -2,7 +2,7 @@
 
 import assert from "power-assert";
 import puppeteer from "puppeteer";
-import {SectionConfig, Settings, wait} from "../index";
+import Settings, {SectionConfig, wait} from "../index";
 
 import * as localforage from "localforage";
 jest.mock("localforage");
