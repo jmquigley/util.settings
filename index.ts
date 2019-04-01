@@ -10,7 +10,6 @@ import {PromiseFn} from "util.promise";
 import {splitInTwo} from "util.string";
 import {waitPromise} from "util.wait";
 
-const debug = require("debug")("util.settings");
 const onChange = require("on-change");
 
 export const wait = waitPromise;
@@ -19,9 +18,9 @@ export interface SectionKeyVal {
 	[key: string]: any;
 }
 
-export interface SectionConfig {
+export interface SectionConfig<T = SectionKeyVal> {
 	name: string;
-	default: SectionKeyVal;
+	default: T;
 }
 
 export interface Sections {
@@ -245,7 +244,6 @@ export class Settings {
 	@autobind
 	public removeKey(section: string, key: string) {
 		const compositeKey = `${section}.${key}`;
-		debug(`removing key: ${compositeKey}`);
 
 		localforage
 			.removeItem(compositeKey)
@@ -268,9 +266,7 @@ export class Settings {
 	 * @param previousValue {any} - the current value before the save
 	 */
 	@autobind
-	private save(path: string, value: any, previousValue: any) {
-		debug("Saving setting %s to %o from %o", path, value, previousValue);
-
+	private save(path: string, value: any) {
 		localforage
 			.setItem(path, value)
 			.catch((err: string) => console.error(err));
@@ -285,7 +281,7 @@ export class Settings {
 		for (const section of this.sections) {
 			for (const key of Object.keys(this._noProxyRoot[section])) {
 				const path = `${section}.${key}`;
-				this.save(path, this._noProxyRoot[section][key], null);
+				this.save(path, this._noProxyRoot[section][key]);
 			}
 		}
 	}

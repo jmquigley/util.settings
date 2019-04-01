@@ -1,6 +1,6 @@
 {
 	"name": "util.settings",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"author": "jmquigley <jmquigley@outlook.com>",
 	"description": "Settings management singleton for a web application.",
 	"debug": true,
@@ -24,9 +24,10 @@
 		"index.d.ts"
 	],
 	"dependencies": {
+		"immutable": "^4.0.0-rc.12",
 		"localforage": "^1.7.3",
 		"lodash": "^4.17.11",
-		"on-change": "git+https://github.com/sindresorhus/on-change.git#6ef02b403b285737466caffb3cd911ce126069ac",
+		"on-change": "^1.2.0",
 		"util.join": "^0.0.25",
 		"util.promise": "^0.0.27",
 		"util.string": "^0.0.23",
@@ -47,7 +48,7 @@
 		"@types/fs-extra": "5.0.5",
 		"@types/jest": "^24.0.11",
 		"@types/lodash": "^4.14.123",
-		"@types/node": "^11.12.1",
+		"@types/node": "^11.12.2",
 		"@types/power-assert": "^1.5.0",
 		"autobind-decorator": "^2.4.0",
 		"babel-loader": "^8.0.5",
@@ -64,7 +65,7 @@
 		"puppeteer": "^1.14.0",
 		"tslint": "^5.14.0",
 		"tslint-config-prettier": "^1.18.0",
-		"typescript": "^3.3.4000",
+		"typescript": "^3.4.1",
 		"util.fixture": "0.0.72",
 		"util.log": "^0.0.43",
 		"util.pkgwrap": "^0.0.108",

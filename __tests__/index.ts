@@ -1,5 +1,6 @@
 "use strict";
 
+import {OrderedSet} from "immutable";
 import assert from "power-assert";
 import puppeteer from "puppeteer";
 import Settings, {SectionConfig, wait} from "../index";
@@ -80,31 +81,67 @@ test("Retrieve an instance of the settings class", async () => {
 });
 
 test("Use a single config instance with register", async () => {
-	const instance = await Settings.instance(true).then((instance) => {
-		assert(instance);
+	const instance = await Settings.instance(true)
+		.then((instance) => {
+			assert(instance);
 
-		debug("test 2 settings: %O", instance.root);
+			debug("test 2 settings: %O", instance.root);
 
-		const newSettings: SectionConfig = {
-			name: "section3",
-			default: {
-				key1: "foo",
-				key2: "bar"
-			}
-		};
+			const newSettings: SectionConfig = {
+				name: "section3",
+				default: {
+					key1: "foo",
+					key2: "bar"
+				}
+			};
 
-		assert(newSettings);
+			assert(newSettings);
 
-		const settings = instance.register(newSettings);
-		assert(settings);
-		assert(instance.sections);
-		assert(instance.sections.length === 2);
+			const settings = instance.register(newSettings);
+			assert(settings);
+			assert(instance.sections);
+			assert(instance.sections.length === 2);
 
-		expect(settings).toMatchSnapshot();
-		expect(instance.noProxyRoot).toMatchSnapshot();
+			expect(settings).toMatchSnapshot();
+			expect(instance.noProxyRoot).toMatchSnapshot();
 
-		return instance.clear();
-	});
+			return instance.clear();
+		})
+		.catch((err: string) => console.error(err));
+});
+
+test("Use immutable with a complex type in settings", async () => {
+	const instance = await Settings.instance(true)
+		.then((instance) => {
+			assert(instance);
+
+			debug("test immutable settings: %O", instance.root);
+
+			const newSettings: SectionConfig = {
+				name: "immutable",
+				default: {
+					key1: OrderedSet<string>()
+				}
+			};
+
+			assert(newSettings);
+
+			const settings = instance.register(newSettings);
+			assert(settings);
+			assert(instance.sections);
+			assert(instance.sections.length === 2);
+
+			return instance;
+		})
+		.then((instance) => {
+			const settings = instance.root;
+			settings["immutable"]["key1"] = settings["immutable"]["key1"].add(
+				"test"
+			);
+			expect(settings).toMatchSnapshot();
+			return instance.clear();
+		})
+		.catch((err: string) => console.error(err));
 });
 
 test("Remove a key from the settings", async () => {
@@ -122,7 +159,8 @@ test("Remove a key from the settings", async () => {
 		.then((instance) => {
 			expect(instance.root).toMatchSnapshot();
 			return instance.clear();
-		});
+		})
+		.catch((err: string) => console.error(err));
 });
 
 test("Pass invalid configuration object to register (no name)", async () => {

@@ -82,3 +82,18 @@ Object {
   },
 }
 `;
+
+exports[`Use immutable with a complex type in settings 1`] = `
+Object {
+  "immutable": Object {
+    "key1": Immutable.OrderedSet [
+      "test",
+    ],
+  },
+  "testing": Object {
+    "key1": "testkey1",
+    "key2": "testkey2",
+    "key3": "testkey3",
+  },
+}
+`;

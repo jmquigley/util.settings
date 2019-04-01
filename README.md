@@ -40,6 +40,7 @@ $ yarn stop
 ## Overview
 This module contains code to manage and persist settings for a web application using [localforage](https://localforage.github.io/localForage/).  A section is registered with the settings instance singleton using the register function.  These settings are then placed into a simple object that is monitored by a [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) using the [on-change](https://github.com/sindresorhus/on-change) library.  When the application makes changes to this object the changes are automatically persisted to local storage using the [localforage](https://localforage.github.io/localForage/) package.
 
+
 ## Usage
 
 To retrieve the Settings object instance and register new configuration options, use the `.instance()` Promise factory:
@@ -72,7 +73,28 @@ Settings.instance()
 
 The `instance()` call is a [thenable](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then).  When the promise instance is exectued it is initialized and passed to `then`.  During this initialization previous settings are retrieved from [localforage](https://localforage.github.io/localForage/) and saved in the root settings object.  Inside of `then` the `register()` is called to add a section to the settings.  The example above adds a new section named `general` with three settings keys.  If the section already exists it is used instead of adding a new section.
 
-The settings object is then retrieved and set globally on the window via a call to `instance.root`.  Each of the setting can then be retrieved like any normal Javascript object in `window.settings`, e.g. `window.settings.general.key1`.  Changes that are made to this settings object are captured via a Proxy and automatically persisted to the localforage.
+The settings object is then retrieved and set globally on the window via a call to `instance.root`.  Each of the setting can then be retrieved like any normal Javascript object in `window.settings`, e.g. `window.settings.general.key1`.  Changes that are made to this settings object are captured via a Proxy and automatically persisted to the localforage.  The following [data types](https://localforage.github.io/localForage/#data-api-setitem) can be used:
+
+- Array
+- ArrayBuffer
+- Blob
+- Float32Array
+- Float64Array
+- Int8Array
+- Int16Array
+- Int32Array
+- Number
+- Object
+- Uint8Array
+- Uint8ClampedArray
+- Uint16Array
+- Uint32Array
+- String
+
+Note that there is an issue with keys that contain complex objects (e.g. An array of strings associated to a key).  If the underlying object is manipulated, then the Proxy will not properly invoke the associated save.  This can be worked around by cloning the underlying object, manipulating the clone, and then assigning the clone back to the key.
+
+An idea to fix this was to use [ImmutableJS](https://github.com/immutable-js/immutable-js), but that will not work in this library because this object type is not properly serialized by [localforage](https://localforage.github.io/localForage/).
+
 
 ## API
 
