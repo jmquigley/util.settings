@@ -2,12 +2,11 @@
 
 > Settings management singleton for a web application
 
-[![build](https://circleci.com/gh/jmquigley/util.settings/tree/master.svg?style=shield)](https://circleci.com/gh/jmquigley/util.settings/tree/master)
+[![build](https://github.com/jmquigley/util.settings/workflows/build/badge.svg)](https://github.com/jmquigley/util.settings/actions)
 [![analysis](https://img.shields.io/badge/analysis-tslint-9cf.svg)](https://palantir.github.io/tslint/)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![testing](https://img.shields.io/badge/testing-jest-blue.svg)](https://facebook.github.io/jest/)
 [![NPM](https://img.shields.io/npm/v/util.settings.svg)](https://www.npmjs.com/package/util.settings)
-[![Coverage Status](https://coveralls.io/repos/github/jmquigley/util.settings/badge.svg?branch=master)](https://coveralls.io/github/jmquigley/util.settings?branch=master)
 
 
 ## Installation
@@ -36,6 +35,17 @@ This will start a localhost server on port 4000.  To stop the server use:
 $ yarn stop
 ```
 
+Also note when building this module one may see the warning "npm WARN lifecycle The node binary used for scripts is ...".  To get rid of this warning in the build environment add the following to `~/.npmrc`:
+
+```
+scripts-prepend-node-path=true
+```
+
+This can also be done via the CLI with:
+
+```
+$ npm config set scripts-prepend-node-path true
+```
 
 ## Overview
 This module contains code to manage and persist settings for a web application using [localforage](https://localforage.github.io/localForage/).  A section is registered with the settings instance singleton using the register function.  These settings are then placed into a simple object that is monitored by a [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) using the [on-change](https://github.com/sindresorhus/on-change) library.  When the application makes changes to this object the changes are automatically persisted to local storage using the [localforage](https://localforage.github.io/localForage/) package.

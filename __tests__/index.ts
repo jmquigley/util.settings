@@ -1,5 +1,3 @@
-"use strict";
-
 import {OrderedSet} from "immutable";
 import assert from "power-assert";
 import puppeteer from "puppeteer";
